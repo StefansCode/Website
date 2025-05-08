@@ -1,0 +1,51 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+#animation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #000;
+}
+
+#fishCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#content-container {
+    position: relative;
+    width: 66%;
+    min-height: 100vh;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+    padding: 2rem;
+}
+
+header {
+    margin-bottom: 2rem;
+}
+
+main {
+    margin-bottom: 2rem;
+}
+
+footer {
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px solid #ccc;
+} 
