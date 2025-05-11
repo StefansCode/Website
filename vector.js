@@ -1,31 +1,33 @@
 class Vector {
+
+    // Constructor
     constructor(x, y) {
         this.x = x;
         this.y = y;
     }
 
-    // Addiert einen anderen Vektor (mutiert this)
+    // Adds another vector to this vector (mutates this)
     add(v) {
         this.x += v.x;
         this.y += v.y;
         return this;
     }
 
-    // Subtrahiert einen anderen Vektor (mutiert this)
+    // Subtracts another vector from this vector (mutates this)
     subtract(v) {
         this.x -= v.x;
         this.y -= v.y;
         return this;
     }
 
-    // Skaliert den Vektor mit einem Faktor (mutiert this)
+    // Scales the vector by a factor (mutates this)
     scale(factor) {
         this.x *= factor;
         this.y *= factor;
         return this;
     }
 
-    // Skaliert den Vektor auf eine bestimmte Länge (mutiert this)
+    // Scales the vector to a specific length (mutates this)
     scaleToLength(length) {
         const currentLength = this.length();
         if (currentLength === 0) {
@@ -38,17 +40,19 @@ class Vector {
         return this;
     }
     
+    // Inverts the x-coordinate of this vector (mutates this)
     invertX() {
         this.x = -this.x;
         return this;
     }
 
+    // Inverts the y-coordinate of this vector (mutates this)
     invertY() {
         this.y = -this.y;
         return this;
     }
 
-    // Rotiert den Vektor um einen Winkel (in Radiant, mutiert this)
+    // Rotates the vector by an angle (in radians, mutates this)
     rotate(angle) {
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
@@ -59,17 +63,17 @@ class Vector {
         return this;
     }
 
-    // Gibt eine Kopie des Vektors zurück
+    // Returns a copy of this vector
     clone() {
         return new Vector(this.x, this.y);
     }
 
-    // Länge des Vektors
+    // Returns the length of this vector
     length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
-    // Für eine schönere Ausgabe
+    // Returns a string representation of this vector
     toString() {
         return `Vector(${this.x.toFixed(2)}, ${this.y.toFixed(2)})`;
     }
