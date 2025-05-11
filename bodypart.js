@@ -42,6 +42,40 @@ class Bodypart {
     }
 
     /**
+     * Draws the body part on the canvas
+     * 
+     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+     */
+    draw(ctx) {
+        if (!ctx) {
+            console.error('No canvas context provided to draw method');
+            return;
+        }
+
+        // Start a new path
+        ctx.beginPath();
+        
+        // Draw a circle at the body part's position
+        ctx.arc(
+            this.position.x,    // x-coordinate
+            this.position.y,    // y-coordinate
+            this.size,         // radius
+            0,                 // start angle
+            Math.PI * 2        // end angle
+        );
+        
+        // Set the drawing style
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        
+        // Draw the outline
+        ctx.stroke();
+        
+        // Close the path
+        ctx.closePath();
+    }
+
+    /**
      * Returns a string representation of this body part
      * @returns {string} A string containing position, direction and size
      */

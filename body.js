@@ -137,5 +137,13 @@ class Body {
             this.head.direction.invertY();
         }
     }
-}
 
+    /**
+     * Draws the body on the canvas
+     * 
+     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+     */
+    draw(ctx) {
+        this.parts.forEach(part => part.draw(ctx));
+    }
+}
