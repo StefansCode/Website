@@ -24,7 +24,7 @@ class Bodypart {
     getLeft() {
         const rightVector = this.direction.clone()
                                                 .rotate(Math.PI / 2)
-                                                .scale(this.size);
+                                                .scaleToLength(this.size);
         return this.position.clone().add(rightVector);
     }
 
@@ -37,7 +37,7 @@ class Bodypart {
     getRight() {
         const rightVector = this.direction.clone()
                                             .rotate(-Math.PI / 2)
-                                            .scale(this.size);
+                                            .scaleToLength(this.size);
         return this.position.clone().add(rightVector);
     }
 
@@ -46,7 +46,7 @@ class Bodypart {
      * 
      * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
      */
-    draw(ctx) {
+    draw_as_circle(ctx) {
         if (!ctx) {
             console.error('No canvas context provided to draw method');
             return;
@@ -73,6 +73,14 @@ class Bodypart {
         
         // Close the path
         ctx.closePath();
+    }
+    
+    /**
+     * Draws the direction vector from the position
+     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+     */
+    draw_as_vector(ctx) {
+        this.direction.draw(ctx, this.position);
     }
 
     /**

@@ -52,6 +52,18 @@ class Vector {
         return this;
     }
 
+    // Sets the x-coordinate to its absolute value (mutates this)
+    setXToAbsolute() {
+        this.x = Math.abs(this.x);
+        return this;
+    }
+
+    // Sets the y-coordinate to its absolute value (mutates this)
+    setYToAbsolute() {
+        this.y = Math.abs(this.y);
+        return this;
+    }
+
     // Rotates the vector by an angle (in radians, mutates this)
     rotate(angle) {
         const cos = Math.cos(angle);
@@ -76,5 +88,44 @@ class Vector {
     // Returns a string representation of this vector
     toString() {
         return `Vector(${this.x.toFixed(2)}, ${this.y.toFixed(2)})`;
+    }
+
+    head_size = 5;
+    head_angle = Math.PI / 6;
+    // Draws this vector from vector v
+    draw(ctx, v) {
+        // Draw the main line
+        ctx.beginPath();
+        ctx.moveTo(v.x, v.y);
+        ctx.lineTo(v.x + this.x, v.y + this.y);
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Calculate arrow head
+        const arrowLength = this.head_size;  // Length of the arrow head
+        const arrowAngle = this.head_angle;  // 30 degrees
+
+        // Calculate the angle of the vector
+        const angle = Math.atan2(this.y, this.x);
+        
+        // Calculate the end point of the vector
+        const endX = v.x + this.x;
+        const endY = v.y + this.y;
+
+        // Draw the arrow head
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+            endX - arrowLength * Math.cos(angle + arrowAngle),
+            endY - arrowLength * Math.sin(angle + arrowAngle)
+        );
+        ctx.lineTo(
+            endX - arrowLength * Math.cos(angle - arrowAngle),
+            endY - arrowLength * Math.sin(angle - arrowAngle)
+        );
+        ctx.closePath();
+        ctx.fillStyle = 'white';
+        ctx.fill();
     }
 }

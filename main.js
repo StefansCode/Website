@@ -7,8 +7,8 @@ const ctx = canvas.getContext('2d');
 
 // Create list with a body-----------------------------------------------------
 
-const bodies = [new Body([12, 14, 15, 14, 12, 10, 8, 6, 4])];
-
+//const Kois = [new fish([12, 14, 15, 14, 12, 10, 8, 6, 4])];
+const Kois = [new fish([12, 14, 30, 20, 12, 10, 8, 6, 4])];
 
 // Define functions------------------------------------------------------------
 // Resize the canvas when the window is resized
@@ -25,9 +25,11 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Update and draw all bodies
-    bodies.forEach(body => {
-        body.update();
-        body.draw(ctx);
+    Kois.forEach(koi => {
+        koi.update();
+        //koi.draw_as_circles(ctx);
+        //koi.draw_as_vectors(ctx);
+        koi.draw_fish(ctx);
     });
     
     // Request next frame
@@ -38,8 +40,8 @@ function animate() {
 // Initialize everything when the page is loaded
 window.addEventListener('load', () => {
     console.log('Seite geladen, initialisiere...');
-    resize(); // Set initial size
-    animate(); // Start animation
+    resize();   // Set initial size
+    animate();  // Start animation
 });
 
 // Handle window resize

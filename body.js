@@ -40,7 +40,7 @@ class Body {
         
         // Set initial direction
         if (this.head) {
-            this.head.direction = new Vector(1, 1);
+            this.head.direction = new Vector(1, 1).scaleToLength(this.offset);
         }
     }
     
@@ -63,23 +63,25 @@ class Body {
         // Check if the head exists
         if (!this.head) return;
 
-        // Calculate the movement vector based on the head's direction and speed
-        const moveVector = this.head.direction.clone()
-            .scaleToLength(this.speed);
-
-        // Move the head
+        // Move the head in its current direction
+        const moveVector = this.head.direction.clone().scaleToLength(this.speed);
         this.head.position.add(moveVector);
 
-        // Update each body part's position to maintain the fixed offset distance from its predecessor
-        // If the distance is not equal to the offset, adjust the position accordingly
+        // Update each body part to follow its predecessor
         for (let i = 1; i < this.parts.length; i++) {
-            const prev = this.parts[i - 1];
-            const curr = this.parts[i];
-            const toPrev = prev.position.clone().subtract(curr.position);
-            const dist = toPrev.length();
-            if (dist !== this.offset) {
-                toPrev.scaleToLength(dist - this.offset);
-                curr.position.add(toPrev);
+            const previousPart = this.parts[i - 1];
+            const currentPart = this.parts[i];
+            
+            // Calculate vector from current part to previous part
+            currentPart.direction = previousPart.position.clone()
+                .subtract(currentPart.position);
+            
+            // If distance is not equal to offset, adjust position
+            const currentDistance = currentPart.direction.length();
+            if (currentDistance !== this.offset) {
+                const adjustmentVector = currentPart.direction.clone()
+                    .scaleToLength(currentDistance - this.offset);
+                currentPart.position.add(adjustmentVector);
             }
         }
     }
@@ -112,7 +114,7 @@ class Body {
      * If the head reaches a boundary, its direction is inverted to keep it within bounds.
      * @param {number} margin - Margin from the boundaries to start collision detection
      */
-    checkBounds(margin = 0) {
+    checkBounds(margin = 0 ) {
 
         // Check if the head exists
         if (!this.head) return;
@@ -125,16 +127,16 @@ class Body {
 
         // Check X boundaries
         if (this.head.position.x < minX + margin) {
-            this.head.direction.invertX();
+            this.head.direction.setXToAbsolute();
         } else if (this.head.position.x > maxX - margin) {
-            this.head.direction.invertX();
+            this.head.direction.setXToAbsolute().invertX();
         }
 
         // Check Y boundaries
         if (this.head.position.y < minY + margin) {
-            this.head.direction.invertY();
+            this.head.direction.setYToAbsolute();
         } else if (this.head.position.y > maxY - margin) {
-            this.head.direction.invertY();
+            this.head.direction.setYToAbsolute().invertY();
         }
     }
 
@@ -143,7 +145,16 @@ class Body {
      * 
      * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
      */
-    draw(ctx) {
-        this.parts.forEach(part => part.draw(ctx));
+    draw_as_circles(ctx) {
+        this.parts.forEach(part => part.draw_as_circle(ctx));
+    }
+
+    /**
+     * Draws the body on the canvas as vectors
+     * 
+     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+     */
+    draw_as_vectors(ctx) {
+        this.parts.forEach(part => part.draw_as_vector(ctx));
     }
 }
