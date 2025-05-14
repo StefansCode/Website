@@ -49,8 +49,9 @@ class Body {
      * This is the main update method that should be called each frame.
      */
     update(){
-        this.update_direction();
+        this.move_randomly();
         this.move();
+        this.checkBounds();
     }
 
     /**
@@ -95,9 +96,7 @@ class Body {
      * Updates the direction of the body with random movement.
      * Checks boundaries and occasionally changes direction randomly.
      */
-    update_direction(){
-
-        this.checkBounds();
+    move_randomly(){
 
         // Check if the head exists
         if (!this.head) return;
@@ -156,5 +155,109 @@ class Body {
      */
     draw_as_vectors(ctx) {
         this.parts.forEach(part => part.draw_as_vector(ctx));
+    }
+    // Draws the right side of the fish by connecting all right points
+    draw_right_side(ctx) {
+        // Start drawing the path
+        ctx.beginPath();
+        
+        // Start with the last point (back of the fish)
+        const firstPoint = this.parts[this.parts.length - 1].getRight();
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+        
+        // Draw line to each point from back to front
+        for (let i = this.parts.length - 2; i >= 0; i--) {
+            const point = this.parts[i].getRight();
+            ctx.lineTo(point.x, point.y);
+        }
+        
+        // Style and stroke the path
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Draws the left side of the fish by connecting all left points
+    draw_left_side(ctx) {
+        // Start drawing the path
+        ctx.beginPath();
+        
+        // Start with the last point (back of the fish)
+        const firstPoint = this.parts[this.parts.length - 1].getLeft();
+        ctx.moveTo(firstPoint.x, firstPoint.y);
+        
+        // Draw line to each point from back to front
+        for (let i = this.parts.length - 2; i >= 0; i--) {
+            const point = this.parts[i].getLeft();
+            ctx.lineTo(point.x, point.y);
+        }
+        
+        // Style and stroke the path
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Draws the head of the fish
+    draw_head(ctx) {
+        // Draw a semicircle at the head position
+        ctx.beginPath();
+        const leftPoint = this.head.getLeft();
+        const rightPoint = this.head.getRight();
+        ctx.arc(this.head.position.x, this.head.position.y, this.head.size, 
+            Math.atan2(rightPoint.y - this.head.position.y, rightPoint.x - this.head.position.x),
+            Math.atan2(leftPoint.y - this.head.position.y, leftPoint.x - this.head.position.x));
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Draws the tail of the fish
+    draw_tail(ctx) {
+        // Draw a semicircle at the tail position
+        ctx.beginPath();
+        const leftPoint = this.tail.getLeft();
+        const rightPoint = this.tail.getRight();
+        ctx.arc(this.tail.position.x, this.tail.position.y, this.tail.size,
+            Math.atan2(leftPoint.y - this.tail.position.y, leftPoint.x - this.tail.position.x),
+            Math.atan2(rightPoint.y - this.tail.position.y, rightPoint.x - this.tail.position.x));
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Draws the complete fish by combining all drawing functions
+    draw_fish(ctx) {
+        this.draw_right_side(ctx);
+        this.draw_left_side(ctx);
+        this.draw_head(ctx);
+        this.draw_tail(ctx);
+        this.draw_smiley(ctx);
+    }
+
+    // Draws a smiley face on the fish's head
+    draw_smiley(ctx) {
+        // Calculate eye positions (slightly above and to the sides of the head)
+        const eyeOffset = this.head.size * 0.3;
+        const leftEye = this.head.getLeft().clone().add(this.head.direction.clone().scaleToLength(eyeOffset));
+        const rightEye = this.head.getRight().clone().add(this.head.direction.clone().scaleToLength(eyeOffset));
+
+        // Draw eyes
+        ctx.beginPath();
+        ctx.arc(leftEye.x, leftEye.y, this.head.size * 0.3, 0, Math.PI * 2);
+        ctx.arc(rightEye.x, rightEye.y, this.head.size * 0.3, 0, Math.PI * 2);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        // Draw smile (semicircle below the eyes)
+        ctx.beginPath();
+        const smileStart = this.head.getLeft().clone().add(this.head.direction.clone().scaleToLength(this.head.size * 0.5));
+        const smileEnd = this.head.getRight().clone().add(this.head.direction.clone().scaleToLength(this.head.size * 0.5));
+        ctx.arc(this.head.position.x, this.head.position.y, this.head.size * 0.4,
+            Math.atan2(smileStart.y - this.head.position.y, smileStart.x - this.head.position.x),
+            Math.atan2(smileEnd.y - this.head.position.y, smileEnd.x - this.head.position.x));
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 }
