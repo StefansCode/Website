@@ -21,7 +21,7 @@ class Vector {
     }
 
     // Scales the vector by a factor (mutates this)
-    scale(factor) {
+    scaleByFactor(factor) {
         this.x *= factor;
         this.y *= factor;
         return this;
@@ -35,7 +35,7 @@ class Vector {
             this.y = 0;
         } else {
             const factor = length / currentLength;
-            this.scale(factor);
+            this.scaleByFactor(factor);
         }
         return this;
     }
@@ -83,6 +83,16 @@ class Vector {
     // Returns the length of this vector
     length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    // Returns the angle between this vector and another vector, normalized between 0 and 2π
+    angleTo(v) {
+        let angle = Math.atan2(v.y, v.x) - Math.atan2(this.y, this.x);
+        // Normalize to [0, 2π]
+        if (angle < 0) {
+            angle += 2 * Math.PI;
+        }
+        return angle;
     }
 
     // Returns a string representation of this vector

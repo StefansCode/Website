@@ -205,8 +205,8 @@ class Body {
         const leftPoint = this.head.getLeft();
         const rightPoint = this.head.getRight();
         ctx.arc(this.head.position.x, this.head.position.y, this.head.size, 
-            Math.atan2(rightPoint.y - this.head.position.y, rightPoint.x - this.head.position.x),
-            Math.atan2(leftPoint.y - this.head.position.y, leftPoint.x - this.head.position.x));
+            this.head.position.angleTo(rightPoint),
+            this.head.position.angleTo(leftPoint));
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
         ctx.stroke();
@@ -219,8 +219,8 @@ class Body {
         const leftPoint = this.tail.getLeft();
         const rightPoint = this.tail.getRight();
         ctx.arc(this.tail.position.x, this.tail.position.y, this.tail.size,
-            Math.atan2(leftPoint.y - this.tail.position.y, leftPoint.x - this.tail.position.x),
-            Math.atan2(rightPoint.y - this.tail.position.y, rightPoint.x - this.tail.position.x));
+            this.tail.position.angleTo(leftPoint),
+            this.tail.position.angleTo(rightPoint));
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
         ctx.stroke();
@@ -254,8 +254,8 @@ class Body {
         const smileStart = this.head.getLeft().clone().add(this.head.direction.clone().scaleToLength(this.head.size * 0.5));
         const smileEnd = this.head.getRight().clone().add(this.head.direction.clone().scaleToLength(this.head.size * 0.5));
         ctx.arc(this.head.position.x, this.head.position.y, this.head.size * 0.4,
-            Math.atan2(smileStart.y - this.head.position.y, smileStart.x - this.head.position.x),
-            Math.atan2(smileEnd.y - this.head.position.y, smileEnd.x - this.head.position.x));
+            this.head.position.angleTo(smileStart),
+            this.head.position.angleTo(smileEnd));
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
         ctx.stroke();
