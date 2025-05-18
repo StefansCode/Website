@@ -75,6 +75,20 @@ class Vector {
         return this;
     }
 
+    // Rotates this vector towards another vector by a given angle
+    rotateTowards(targetVector, angle) {
+        // Calculate the angle between this vector and the target vector
+        const currentAngle = this.angleTo(targetVector);
+        
+        // If the angle is greater than PI, we need to rotate in the opposite direction
+        const rotationDirection = currentAngle > Math.PI ? 1 : -1;
+        
+        // Rotate by the given angle in the correct direction
+        this.rotate(rotationDirection * angle);
+        
+        return this;
+    }
+
     // Returns a copy of this vector
     clone() {
         return new Vector(this.x, this.y);

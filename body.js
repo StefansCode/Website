@@ -30,10 +30,13 @@ class Body {
             throw new Error('sizeList must be an array');
         }
 
+        //start position
+        const startPosition = new Vector(window.innerWidth / 2, window.innerHeight / 2);
+
         // Create body parts
         this.parts = sizeList.map((size, i) =>
             new Bodypart(
-                new Vector(-this.offset * i, 0),
+                startPosition.clone().add(new Vector(-this.offset * i, 0)),
                 new Vector(0, this.offset),
                 size
             )
@@ -55,8 +58,10 @@ class Body {
      */
     update(){
         this.moveRandomly();
+        if (this.checkBounds()) {
+            this.turnTowardsMiddle(Math.PI * 0.2);
+        }
         this.move();
-        this.checkBounds();
     }
 
     /**
@@ -108,15 +113,32 @@ class Body {
         }
     }
 
+     /**
+     * Turns the fish towards the center of the screen by a given angle
+     * @param {number} angle - The angle in radians to turn
+     */
+     turnTowardsMiddle(angle) {
+        if (!this.head) return;
+
+        // Calculate the center of the screen
+        const center = new Vector(window.innerWidth / 2, window.innerHeight / 2);
+        
+        // Create a vector pointing from the fish's head to the center
+        const toCenter = center.clone().subtract(this.head.position);
+        
+        // Rotate the head's direction towards the center
+        this.head.direction.rotateTowards(toCenter, angle);
+    }
+
     /**
      * Checks and handles boundary collisions.
      * If the head reaches a boundary, its direction is inverted to keep it within bounds.
      * @param {number} margin - Margin from the boundaries to start collision detection
      */
-    checkBounds(margin = 0 ) {
+    checkBounds(margin = 100 ) {
 
         // Check if the head exists
-        if (!this.head) return;
+        if (!this.head) return false;
 
         // Get the boundaries of the window
         const minX = 0;
@@ -125,18 +147,20 @@ class Body {
         const maxY = window.innerHeight;
 
         // Check X boundaries
-        if (this.head.position.x < minX + margin) {
-            this.head.direction.setXToAbsolute();
-        } else if (this.head.position.x > maxX - margin) {
-            this.head.direction.setXToAbsolute().invertX();
+        if (this.head.position.x < minX + margin * Math.random()) {
+            return true;
+        } else if (this.head.position.x > maxX - margin * Math.random()) {
+            return true;
         }
 
         // Check Y boundaries
-        if (this.head.position.y < minY + margin) {
-            this.head.direction.setYToAbsolute();
-        } else if (this.head.position.y > maxY - margin) {
-            this.head.direction.setYToAbsolute().invertY();
+        if (this.head.position.y < minY + margin * Math.random()) {
+            return true;
+        } else if (this.head.position.y > maxY - margin * Math.random()) {
+            return true;
         }
+
+        return false;
     }
 
     /**
