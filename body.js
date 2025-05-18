@@ -13,8 +13,8 @@ class Body {
     /** Reference to the last body part (tail) */
     tail = null;
 
-    /** Maximum angle for random direction changes in radians */
-    randomMovementAngle = 0.1 * Math.PI * 2;
+    /** Maximum angle for turning in radians */
+    maxTurnAngle = 0.1 * Math.PI * 2;
     /** Probability of random direction change (0-1) */
     randomMovementChance = 0.1;
 
@@ -58,9 +58,7 @@ class Body {
      */
     update(){
         this.moveRandomly();
-        if (this.checkBounds()) {
-            this.turnTowardsMiddle(Math.PI * 0.2);
-        }
+        this.checkBounds();
         this.move();
     }
 
@@ -106,28 +104,10 @@ class Body {
         // Check if the head exists
         if (!this.head) return;
 
-        // Rotate the head by random_movement_angle with a chance of random_movement_chance
         if (Math.random() < this.randomMovementChance) {
-            const randomAngle = (2*Math.random() - 1) * this.randomMovementAngle;
+            const randomAngle = (2*Math.random() - 1) * this.maxTurnAngle;
             this.head.direction.rotate(randomAngle);
         }
-    }
-
-     /**
-     * Turns the fish towards the center of the screen by a given angle
-     * @param {number} angle - The angle in radians to turn
-     */
-     turnTowardsMiddle(angle) {
-        if (!this.head) return;
-
-        // Calculate the center of the screen
-        const center = new Vector(window.innerWidth / 2, window.innerHeight / 2);
-        
-        // Create a vector pointing from the fish's head to the center
-        const toCenter = center.clone().subtract(this.head.position);
-        
-        // Rotate the head's direction towards the center
-        this.head.direction.rotateTowards(toCenter, angle);
     }
 
     /**
@@ -138,7 +118,7 @@ class Body {
     checkBounds(margin = 100 ) {
 
         // Check if the head exists
-        if (!this.head) return false;
+        if (!this.head) return;
 
         // Get the boundaries of the window
         const minX = 0;
@@ -148,19 +128,19 @@ class Body {
 
         // Check X boundaries
         if (this.head.position.x < minX + margin * Math.random()) {
-            return true;
+            this.head.direction.rotateTowards(new Vector(1, 0), this.maxTurnAngle);
         } else if (this.head.position.x > maxX - margin * Math.random()) {
-            return true;
+            this.head.direction.rotateTowards(new Vector(-1, 0), this.maxTurnAngle);
         }
 
         // Check Y boundaries
         if (this.head.position.y < minY + margin * Math.random()) {
-            return true;
+            this.head.direction.rotateTowards(new Vector(0, 1), this.maxTurnAngle);
         } else if (this.head.position.y > maxY - margin * Math.random()) {
-            return true;
+            this.head.direction.rotateTowards(new Vector(0, -1), this.maxTurnAngle);
         }
 
-        return false;
+        return new Vector(0, 0);
     }
 
     /**
