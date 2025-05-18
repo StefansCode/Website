@@ -100,8 +100,8 @@ class Vector {
         return `Vector(${this.x.toFixed(2)}, ${this.y.toFixed(2)})`;
     }
 
-    head_size = 5;
-    head_angle = Math.PI / 6;
+    headSize = 5;
+    headAngle = Math.PI / 6;
     // Draws this vector from vector v
     draw(ctx, v) {
         // Draw the main line
@@ -113,8 +113,8 @@ class Vector {
         ctx.stroke();
 
         // Calculate arrow head
-        const arrowLength = this.head_size;  // Length of the arrow head
-        const arrowAngle = this.head_angle;  // 30 degrees
+        const arrowLength = this.headSize;  // Length of the arrow head
+        const arrowAngle = this.headAngle;  // 30 degrees
 
         // Calculate the angle of the vector
         const angle = Math.atan2(this.y, this.x);

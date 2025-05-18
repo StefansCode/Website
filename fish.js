@@ -1,40 +1,40 @@
-class fish extends Body {
+class Fish extends Body {
 
-    random_movement_angle = 0.2 * Math.PI * 2;
-    random_movement_chance = 0.002;
+    randomMovementAngle = 0.2 * Math.PI * 2;
+    randomMovementChance = 0.002;
 
     constructor(sizeList) {
         super(sizeList);
     }
 
-    minimum_speed = 0.7;
-    speed_after_random_movement = 2;  //IDEA FOR LATER: Make this dependent on the turned angle
-    speed_decay = 0.005;
-    speed_decay_counter = 0;
+    minimumSpeed = 0.7;
+    speedAfterRandomMovement = 2;  //IDEA FOR LATER: Make this dependent on the turned angle
+    speedDecay = 0.005;
+    speedDecayCounter = 0;
 
-    move_randomly(){
+    moveRandomly(){
         // Check if the head exists
         if (!this.head) return;
 
         // Rotate the head by random_movement_angle with a chance of random_movement_chance
-        if (Math.random() < this.random_movement_chance) {
-            const randomAngle = (2*Math.random() - 1) * this.random_movement_angle;
+        if (Math.random() < this.randomMovementChance) {
+            const randomAngle = (2*Math.random() - 1) * this.randomMovementAngle;
             this.head.direction.rotate(randomAngle);
             // Reset speed decay counter
-            this.speed = this.speed_after_random_movement;
-            this.speed_decay_counter = 0;
+            this.speed = this.speedAfterRandomMovement;
+            this.speedDecayCounter = 0;
         }
     }
 
-    update_speed(){
-        if (this.speed > this.minimum_speed){
-            this.speed = this.speed_after_random_movement*Math.pow(2, -this.speed_decay*this.speed_decay_counter);
-            this.speed_decay_counter++;
+    updateSpeed(){
+        if (this.speed > this.minimumSpeed){
+            this.speed = this.speedAfterRandomMovement*Math.pow(2, -this.speedDecay*this.speedDecayCounter);
+            this.speedDecayCounter++;
         }
     }
 
     move(){
         super.move();
-        this.update_speed();
+        this.updateSpeed();
     }   
 }

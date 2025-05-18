@@ -7,8 +7,8 @@ const ctx = canvas.getContext('2d');
 
 // Create list with a body-----------------------------------------------------
 
-//const Kois = [new fish([12, 14, 15, 14, 12, 10, 8, 6, 4])];
-const Kois = [new fish([12, 14, 30, 14, 12, 10, 8, 6, 4])];
+//const Kois = [new Fish([12, 14, 15, 14, 12, 10, 8, 6, 4])];
+const Kois = [new Fish([12, 14, 30, 14, 12, 10, 8, 6, 4])];
 
 // Define functions------------------------------------------------------------
 
@@ -28,9 +28,9 @@ function animate() {
     // Update and draw all bodies
     Kois.forEach(koi => {
         koi.update();
-        //koi.draw_as_circles(ctx);
-        //koi.draw_as_vectors(ctx);
-        koi.draw_fish(ctx);
+        //koi.drawAsCircles(ctx);
+        //koi.drawAsVectors(ctx);
+        koi.drawFish(ctx);
     });
     
     // Request next frame

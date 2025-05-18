@@ -13,6 +13,11 @@ class Body {
     /** Reference to the last body part (tail) */
     tail = null;
 
+    /** Maximum angle for random direction changes in radians */
+    randomMovementAngle = 0.1 * Math.PI * 2;
+    /** Probability of random direction change (0-1) */
+    randomMovementChance = 0.1;
+
     /**
      * Creates a new body with the specified part sizes
      * @param {number[]} sizeList - Array of sizes for each body part
@@ -49,7 +54,7 @@ class Body {
      * This is the main update method that should be called each frame.
      */
     update(){
-        this.move_randomly();
+        this.moveRandomly();
         this.move();
         this.checkBounds();
     }
@@ -87,23 +92,18 @@ class Body {
         }
     }
 
-    /** Maximum angle for random direction changes in radians */
-    random_movement_angle = 0.1 * Math.PI * 2;
-    /** Probability of random direction change (0-1) */
-    random_movement_chance = 0.1;
-
     /**
      * Updates the direction of the body with random movement.
      * Checks boundaries and occasionally changes direction randomly.
      */
-    move_randomly(){
+    moveRandomly(){
 
         // Check if the head exists
         if (!this.head) return;
 
         // Rotate the head by random_movement_angle with a chance of random_movement_chance
-        if (Math.random() < this.random_movement_chance) {
-            const randomAngle = (2*Math.random() - 1) * this.random_movement_angle;
+        if (Math.random() < this.randomMovementChance) {
+            const randomAngle = (2*Math.random() - 1) * this.randomMovementAngle;
             this.head.direction.rotate(randomAngle);
         }
     }
@@ -144,8 +144,8 @@ class Body {
      * 
      * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
      */
-    draw_as_circles(ctx) {
-        this.parts.forEach(part => part.draw_as_circle(ctx));
+    drawAsCircles(ctx) {
+        this.parts.forEach(part => part.drawAsCircle(ctx));
     }
 
     /**
@@ -153,11 +153,11 @@ class Body {
      * 
      * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
      */
-    draw_as_vectors(ctx) {
-        this.parts.forEach(part => part.draw_as_vector(ctx));
+    drawAsVectors(ctx) {
+        this.parts.forEach(part => part.drawAsVector(ctx));
     }
     // Draws the right side of the fish by connecting all right points
-    draw_right_side(ctx) {
+    drawRightSide(ctx) {
         // Start drawing the path
         ctx.beginPath();
         
@@ -178,7 +178,7 @@ class Body {
     }
 
     // Draws the left side of the fish by connecting all left points
-    draw_left_side(ctx) {
+    drawLeftSide(ctx) {
         // Start drawing the path
         ctx.beginPath();
         
@@ -199,26 +199,26 @@ class Body {
     }
 
     // Draws the head of the fish
-    draw_head(ctx) {
-        this.head.draw_semicircle(ctx, -Math.PI/2, Math.PI/2);
+    drawHead(ctx) {
+        this.head.drawSemicircle(ctx, -Math.PI/2, Math.PI/2);
     }
 
     // Draws the tail of the fish
-    draw_tail(ctx) {
-        this.tail.draw_semicircle(ctx, Math.PI/2, -Math.PI/2);
+    drawTail(ctx) {
+        this.tail.drawSemicircle(ctx, Math.PI/2, -Math.PI/2);
     }
 
     // Draws the complete fish by combining all drawing functions
-    draw_fish(ctx) {
-        this.draw_right_side(ctx);
-        this.draw_left_side(ctx);
-        this.draw_head(ctx);
-        this.draw_tail(ctx);
-        this.draw_smiley(ctx);
+    drawFish(ctx) {
+        this.drawRightSide(ctx);
+        this.drawLeftSide(ctx);
+        this.drawHead(ctx);
+        this.drawTail(ctx);
+        this.drawSmiley(ctx);
     }
 
     // Draws a smiley face on the fish's head
-    draw_smiley(ctx) {
+    drawSmiley(ctx) {
         // Calculate eye positions using relative angles
         const eyeOffset = this.head.size * 1;
         const eyeAngle = Math.PI/3; // 90 degrees for eye placement
