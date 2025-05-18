@@ -86,8 +86,8 @@ class Vector {
     }
 
     // Returns the angle between this vector and another vector, normalized between 0 and 2π
-    angleTo(v) {
-        let angle = Math.atan2(v.y, v.x) - Math.atan2(this.y, this.x);
+    angleTo(v = new Vector(1, 0)) {
+        let angle = Math.atan2(v.x, v.y) - Math.atan2(this.x, this.y);
         // Normalize to [0, 2π]
         if (angle < 0) {
             angle += 2 * Math.PI;

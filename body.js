@@ -200,30 +200,12 @@ class Body {
 
     // Draws the head of the fish
     draw_head(ctx) {
-        // Draw a semicircle at the head position
-        ctx.beginPath();
-        const leftPoint = this.head.getLeft();
-        const rightPoint = this.head.getRight();
-        ctx.arc(this.head.position.x, this.head.position.y, this.head.size, 
-            this.head.position.angleTo(rightPoint),
-            this.head.position.angleTo(leftPoint));
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        this.head.draw_semicircle(ctx, -Math.PI/2, Math.PI/2);
     }
 
     // Draws the tail of the fish
     draw_tail(ctx) {
-        // Draw a semicircle at the tail position
-        ctx.beginPath();
-        const leftPoint = this.tail.getLeft();
-        const rightPoint = this.tail.getRight();
-        ctx.arc(this.tail.position.x, this.tail.position.y, this.tail.size,
-            this.tail.position.angleTo(leftPoint),
-            this.tail.position.angleTo(rightPoint));
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        this.tail.draw_semicircle(ctx, Math.PI/2, -Math.PI/2);
     }
 
     // Draws the complete fish by combining all drawing functions
@@ -237,10 +219,21 @@ class Body {
 
     // Draws a smiley face on the fish's head
     draw_smiley(ctx) {
-        // Calculate eye positions (slightly above and to the sides of the head)
-        const eyeOffset = this.head.size * 0.3;
-        const leftEye = this.head.getLeft().clone().add(this.head.direction.clone().scaleToLength(eyeOffset));
-        const rightEye = this.head.getRight().clone().add(this.head.direction.clone().scaleToLength(eyeOffset));
+        // Calculate eye positions using relative angles
+        const eyeOffset = this.head.size * 1;
+        const eyeAngle = Math.PI/3; // 90 degrees for eye placement
+        
+        // Calculate left eye position
+        const leftEyeVector = this.head.direction.clone()
+            .rotate(eyeAngle)
+            .scaleToLength(eyeOffset);
+        const leftEye = this.head.position.clone().add(leftEyeVector);
+        
+        // Calculate right eye position
+        const rightEyeVector = this.head.direction.clone()
+            .rotate(-eyeAngle)
+            .scaleToLength(eyeOffset);
+        const rightEye = this.head.position.clone().add(rightEyeVector);
 
         // Draw eyes
         ctx.beginPath();
@@ -249,13 +242,19 @@ class Body {
         ctx.fillStyle = 'white';
         ctx.fill();
 
-        // Draw smile (semicircle below the eyes)
+        // Draw smile using the same angle logic but with a smaller radius
+        const baseAngle = this.head.direction.clone().angleTo();
+        const startAngle = baseAngle + Math.PI/2;
+        const endAngle = baseAngle - Math.PI/2;
+        
         ctx.beginPath();
-        const smileStart = this.head.getLeft().clone().add(this.head.direction.clone().scaleToLength(this.head.size * 0.5));
-        const smileEnd = this.head.getRight().clone().add(this.head.direction.clone().scaleToLength(this.head.size * 0.5));
-        ctx.arc(this.head.position.x, this.head.position.y, this.head.size * 0.4,
-            this.head.position.angleTo(smileStart),
-            this.head.position.angleTo(smileEnd));
+        ctx.arc(
+            this.head.position.x,
+            this.head.position.y,
+            this.head.size * 0.4,  // Smaller radius for the mouth
+            startAngle,
+            endAngle
+        );
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
         ctx.stroke();

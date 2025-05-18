@@ -84,6 +84,36 @@ class Bodypart {
     }
 
     /**
+     * Draws a semicircle in the specified direction
+     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+     * @param {boolean} [opposite=false] - If true, draws the semicircle in the opposite direction
+     */
+    draw_semicircle(ctx, relativeStartAngle, relativeEndAngle) {
+        if (!ctx) {
+            console.error('No canvas context provided to draw method');
+            return;
+        }
+
+        // Calculate the angles for the semicircle
+        const baseAngle = this.direction.clone().angleTo();
+        const startAngle = baseAngle + relativeStartAngle;
+        const endAngle = baseAngle + relativeEndAngle;
+
+        // Draw the semicircle
+        ctx.beginPath();
+        ctx.arc(
+            this.position.x,
+            this.position.y,
+            this.size,
+            startAngle,
+            endAngle
+        );
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    /**
      * Returns a string representation of this body part
      * @returns {string} A string containing position, direction and size
      */

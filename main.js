@@ -11,6 +11,7 @@ const ctx = canvas.getContext('2d');
 const Kois = [new fish([12, 14, 30, 14, 12, 10, 8, 6, 4])];
 
 // Define functions------------------------------------------------------------
+
 // Resize the canvas when the window is resized
 function resize() {
     console.log('Resize wird ausgeführt...');
@@ -37,6 +38,7 @@ function animate() {
 }
 
 // Initialize Eventlisteners---------------------------------------------------
+
 // Initialize everything when the page is loaded
 window.addEventListener('load', () => {
     console.log('Seite geladen, initialisiere...');
