@@ -99,11 +99,13 @@ class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
-    // Returns the angle between this vector and another vector, normalized between 0 and 2π
+    // Returns the angle between this vector and another vector, normalized between -π and π
     angleTo(v = new Vector(1, 0)) {
         let angle = Math.atan2(v.x, v.y) - Math.atan2(this.x, this.y);
-        // Normalize to [0, 2π]
-        if (angle < 0) {
+        // Normalize to [-π, π]
+        if (angle > Math.PI) {
+            angle -= 2 * Math.PI;
+        } else if (angle < -Math.PI) {
             angle += 2 * Math.PI;
         }
         return angle;

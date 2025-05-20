@@ -17,6 +17,8 @@ class Body {
     maxTurnAngle = 0.1 * Math.PI * 2;
     /** Probability of random direction change (0-1) */
     randomMovementChance = 0.1;
+    /** Maximum allowed angle for the head in radians */
+    maxHeadAngleToTail = Math.PI / 2; // 90 degrees
 
     /**
      * Creates a new body with the specified part sizes
@@ -24,7 +26,6 @@ class Body {
      * @throws {Error} If sizeList is not an array
      */
     constructor(sizeList) {
-
         // Check if sizeList is an array
         if (!Array.isArray(sizeList)) {
             throw new Error('sizeList must be an array');
@@ -68,7 +69,6 @@ class Body {
      * while maintaining the fixed offset distance.
      */
     move() {
-
         // Check if the head exists
         if (!this.head) return;
 
@@ -100,23 +100,25 @@ class Body {
      * Checks boundaries and occasionally changes direction randomly.
      */
     moveRandomly(){
-
         // Check if the head exists
         if (!this.head) return;
+
+        didTurn = false;
 
         if (Math.random() < this.randomMovementChance) {
             const randomAngle = (2*Math.random() - 1) * this.maxTurnAngle;
             this.head.direction.rotate(randomAngle);
+            didTurn = true;
         }
     }
 
     /**
      * Checks and handles boundary collisions.
      * If the head reaches a boundary, its direction is inverted to keep it within bounds.
+     * Only changes direction if the maximum angle is not exceeded.
      * @param {number} margin - Margin from the boundaries to start collision detection
      */
     checkBounds(margin = 100 ) {
-
         // Check if the head exists
         if (!this.head) return;
 
@@ -126,141 +128,45 @@ class Body {
         const minY = 0;
         const maxY = window.innerHeight;
 
+        // Store original direction to check angle after potential change
+        const originalDirection = this.head.direction.clone();
+
+        // Log current angle before any changes
+        const currentAngle = Math.abs(this.head.direction.angleTo(this.parts[1].direction));
+
         // Check X boundaries
         if (this.head.position.x < minX + margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(1, 0), this.maxTurnAngle);
+            this.head.direction.rotateTowards(new Vector(1, 0), this.maxTurnAngle/2);
         } else if (this.head.position.x > maxX - margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(-1, 0), this.maxTurnAngle);
+            this.head.direction.rotateTowards(new Vector(-1, 0), this.maxTurnAngle/2);
         }
 
         // Check Y boundaries
         if (this.head.position.y < minY + margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(0, 1), this.maxTurnAngle);
+            this.head.direction.rotateTowards(new Vector(0, 1), this.maxTurnAngle/2);
         } else if (this.head.position.y > maxY - margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(0, -1), this.maxTurnAngle);
+            this.head.direction.rotateTowards(new Vector(0, -1), this.maxTurnAngle/2);
+        }
+
+        // If the angle would be exceeded, revert to original direction
+        if (this.isHeadAngleExceeded()) {
+            this.head.direction = originalDirection;
         }
 
         return new Vector(0, 0);
     }
 
     /**
-     * Draws the body on the canvas
-     * 
-     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+     * Checks if the head's current angle exceeds the maximum allowed angle
+     * @returns {boolean} True if the angle exceeds the maximum, false otherwise
      */
-    drawAsCircles(ctx) {
-        this.parts.forEach(part => part.drawAsCircle(ctx));
-    }
+    isHeadAngleExceeded() {
+        if (!this.head) return false;
 
-    /**
-     * Draws the body on the canvas as vectors
-     * 
-     * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
-     */
-    drawAsVectors(ctx) {
-        this.parts.forEach(part => part.drawAsVector(ctx));
-    }
-    // Draws the right side of the fish by connecting all right points
-    drawRightSide(ctx) {
-        // Start drawing the path
-        ctx.beginPath();
+        // Calculate the angle between the head's direction and the horizontal axis
+        const currentAngle = Math.abs(this.head.direction.angleTo(this.tail.direction));
         
-        // Start with the last point (back of the fish)
-        const firstPoint = this.parts[this.parts.length - 1].getRight();
-        ctx.moveTo(firstPoint.x, firstPoint.y);
-        
-        // Draw line to each point from back to front
-        for (let i = this.parts.length - 2; i >= 0; i--) {
-            const point = this.parts[i].getRight();
-            ctx.lineTo(point.x, point.y);
-        }
-        
-        // Style and stroke the path
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-
-    // Draws the left side of the fish by connecting all left points
-    drawLeftSide(ctx) {
-        // Start drawing the path
-        ctx.beginPath();
-        
-        // Start with the last point (back of the fish)
-        const firstPoint = this.parts[this.parts.length - 1].getLeft();
-        ctx.moveTo(firstPoint.x, firstPoint.y);
-        
-        // Draw line to each point from back to front
-        for (let i = this.parts.length - 2; i >= 0; i--) {
-            const point = this.parts[i].getLeft();
-            ctx.lineTo(point.x, point.y);
-        }
-        
-        // Style and stroke the path
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
-
-    // Draws the head of the fish
-    drawHead(ctx) {
-        this.head.drawSemicircle(ctx, -Math.PI/2, Math.PI/2);
-    }
-
-    // Draws the tail of the fish
-    drawTail(ctx) {
-        this.tail.drawSemicircle(ctx, Math.PI/2, -Math.PI/2);
-    }
-
-    // Draws the complete fish by combining all drawing functions
-    drawFish(ctx) {
-        this.drawRightSide(ctx);
-        this.drawLeftSide(ctx);
-        this.drawHead(ctx);
-        this.drawTail(ctx);
-        this.drawSmiley(ctx);
-    }
-
-    // Draws a smiley face on the fish's head
-    drawSmiley(ctx) {
-        // Calculate eye positions using relative angles
-        const eyeOffset = this.head.size * 1;
-        const eyeAngle = Math.PI/3; // 90 degrees for eye placement
-        
-        // Calculate left eye position
-        const leftEyeVector = this.head.direction.clone()
-            .rotate(eyeAngle)
-            .scaleToLength(eyeOffset);
-        const leftEye = this.head.position.clone().add(leftEyeVector);
-        
-        // Calculate right eye position
-        const rightEyeVector = this.head.direction.clone()
-            .rotate(-eyeAngle)
-            .scaleToLength(eyeOffset);
-        const rightEye = this.head.position.clone().add(rightEyeVector);
-
-        // Draw eyes
-        ctx.beginPath();
-        ctx.arc(leftEye.x, leftEye.y, this.head.size * 0.3, 0, Math.PI * 2);
-        ctx.arc(rightEye.x, rightEye.y, this.head.size * 0.3, 0, Math.PI * 2);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-
-        // Draw smile using the same angle logic but with a smaller radius
-        const baseAngle = this.head.direction.clone().angleTo();
-        const startAngle = baseAngle + Math.PI/2;
-        const endAngle = baseAngle - Math.PI/2;
-        
-        ctx.beginPath();
-        ctx.arc(
-            this.head.position.x,
-            this.head.position.y,
-            this.head.size * 0.4,  // Smaller radius for the mouth
-            startAngle,
-            endAngle
-        );
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        // Check if the angle exceeds the maximum allowed angle
+        return currentAngle > this.maxHeadAngleToTail;
     }
 }

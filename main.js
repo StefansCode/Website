@@ -28,9 +28,9 @@ function animate() {
     // Update and draw all bodies
     Kois.forEach(koi => {
         koi.update();
-        //koi.drawAsCircles(ctx);
-        //koi.drawAsVectors(ctx);
-        koi.drawFish(ctx);
+        //drawAsCircles(ctx, koi);
+        //drawAsVectors(ctx, koi);
+        drawFish(ctx, koi);
     });
     
     // Request next frame
