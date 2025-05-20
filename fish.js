@@ -13,14 +13,20 @@ class Fish extends Body {
     speedDecayCounter = 0;
 
     moveRandomly(){
-        // Check if the head exists
-        if (!this.head) return;
+        const didTurn = super.moveRandomly();
 
-        // Rotate the head by random_movement_angle with a chance of random_movement_chance
-        if (Math.random() < this.randomMovementChance) {
-            const randomAngle = (2*Math.random() - 1) * this.randomMovementAngle;
-            this.head.direction.rotate(randomAngle);
-            // Reset speed decay counter
+        // If the fish turned, reset the speed and speed decay counter
+        if (didTurn) {
+            this.speed = this.speedAfterRandomMovement;
+            this.speedDecayCounter = 0;
+        }
+    }
+
+    checkBounds(){
+        const didTurn = super.checkBounds();
+
+        // If the fish turned, reset the speed and speed decay counter
+        if (didTurn) {
             this.speed = this.speedAfterRandomMovement;
             this.speedDecayCounter = 0;
         }

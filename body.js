@@ -13,6 +13,9 @@ class Body {
     /** Reference to the last body part (tail) */
     tail = null;
 
+    /** Whether the body has turned in the last update */
+    didTurn = false;
+
     /** Maximum angle for turning in radians */
     maxTurnAngle = 0.1 * Math.PI * 2;
     /** Probability of random direction change (0-1) */
@@ -98,18 +101,18 @@ class Body {
     /**
      * Updates the direction of the body with random movement.
      * Checks boundaries and occasionally changes direction randomly.
+     * @returns {boolean} True if the direction was changed, false otherwise
      */
     moveRandomly(){
         // Check if the head exists
-        if (!this.head) return;
-
-        didTurn = false;
+        if (!this.head) return false;
 
         if (Math.random() < this.randomMovementChance) {
             const randomAngle = (2*Math.random() - 1) * this.maxTurnAngle;
             this.head.direction.rotate(randomAngle);
-            didTurn = true;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -117,10 +120,11 @@ class Body {
      * If the head reaches a boundary, its direction is inverted to keep it within bounds.
      * Only changes direction if the maximum angle is not exceeded.
      * @param {number} margin - Margin from the boundaries to start collision detection
+     * @returns {boolean} True if the direction was changed, false otherwise
      */
     checkBounds(margin = 100 ) {
         // Check if the head exists
-        if (!this.head) return;
+        if (!this.head) return false;
 
         // Get the boundaries of the window
         const minX = 0;
@@ -130,30 +134,33 @@ class Body {
 
         // Store original direction to check angle after potential change
         const originalDirection = this.head.direction.clone();
-
-        // Log current angle before any changes
-        const currentAngle = Math.abs(this.head.direction.angleTo(this.parts[1].direction));
+        let didTurn = false;
 
         // Check X boundaries
         if (this.head.position.x < minX + margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(1, 0), this.maxTurnAngle/2);
+            this.head.direction.rotateTowards(new Vector(1, 0), Math.PI/4);
+            didTurn = true;
         } else if (this.head.position.x > maxX - margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(-1, 0), this.maxTurnAngle/2);
+            this.head.direction.rotateTowards(new Vector(-1, 0), Math.PI/4);
+            didTurn = true;
         }
 
         // Check Y boundaries
         if (this.head.position.y < minY + margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(0, 1), this.maxTurnAngle/2);
+            this.head.direction.rotateTowards(new Vector(0, 1), Math.PI/4);
+            didTurn = true;
         } else if (this.head.position.y > maxY - margin * Math.random()) {
-            this.head.direction.rotateTowards(new Vector(0, -1), this.maxTurnAngle/2);
+            this.head.direction.rotateTowards(new Vector(0, -1), Math.PI/4);
+            didTurn = true;
         }
 
         // If the angle would be exceeded, revert to original direction
         if (this.isHeadAngleExceeded()) {
             this.head.direction = originalDirection;
+            didTurn = false;
         }
 
-        return new Vector(0, 0);
+        return didTurn;
     }
 
     /**
