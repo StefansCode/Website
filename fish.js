@@ -1,7 +1,7 @@
 class Fish extends Body {
 
     randomMovementAngle = 0.2 * Math.PI * 2;
-    randomMovementChance = 0.005;
+    randomMovementChance = 0.003;
 
     constructor(sizeList) {
         super(sizeList);
