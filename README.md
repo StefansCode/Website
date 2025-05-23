@@ -1,6 +1,7 @@
 # Fish Animation Website
 
 This is a simple website that features an animated fish swimming in the background.
+It can be watched at https://stefanscode.github.io/Website.
 
 ## Project Structure
 The JavaScript dependencies are structured as follows:
