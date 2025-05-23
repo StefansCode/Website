@@ -19,10 +19,6 @@ draw.js
 main.js
 ```
 
-## Installation
-1. Clone this repository
-2. Open `index.html` in your web browser
-
 ## Development
 The project uses vanilla JavaScript with no external dependencies. Each file has a specific responsibility:
 - `vector.js`: Handles vector calculations
