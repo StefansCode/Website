@@ -1,3 +1,8 @@
+/* colors from https://2colors.colorion.co/
+ * dark blue:       #02343F
+ * light yellow:    #F0EDCC
+ */
+
 * {
     margin: 0;
     padding: 0;
@@ -17,7 +22,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background-color: #000;
+    background-color: #02343F;
 }
 
 #fishCanvas {
@@ -29,11 +34,40 @@ body {
 #content-container {
     position: relative;
     width: 66%;
-    min-height: 100vh;
+    height: 100vh;
     margin: 0 auto;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: #F0EDCC;
     z-index: 2;
     padding: 2rem;
+    transition: height 0.3s ease-in-out;
+}
+
+#content-container.collapsed {
+    height: 5vh;
+    overflow: hidden;
+}
+
+#content-container header,
+#content-container main,
+#content-container footer {
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#collapseButton {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #F0EDCC;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 3;
+    transition: background-color 0.2s;
+}
+
+#collapseButton:hover {
+    background-color: #ccc;
 }
 
 header {
@@ -47,5 +81,5 @@ main {
 footer {
     margin-top: auto;
     padding-top: 2rem;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #02343F;
 } 
