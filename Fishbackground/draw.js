@@ -58,7 +58,21 @@ function drawLeftSide(ctx, body) {
  * @param {Body} body - The body to draw
  */
 function drawHead(ctx, body) {
-    body.head.drawSemicircle(ctx, -Math.PI/2, Math.PI/2);
+    const baseAngle = Math.atan2(body.head.direction.y, body.head.direction.x);
+    const startAngle = baseAngle - Math.PI/2;
+    const endAngle = baseAngle + Math.PI/2;
+    
+    ctx.beginPath();
+    ctx.arc(
+        body.head.position.x,
+        body.head.position.y,
+        body.head.size,
+        startAngle,
+        endAngle
+    );
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 }
 
 /**
@@ -67,7 +81,21 @@ function drawHead(ctx, body) {
  * @param {Body} body - The body to draw
  */
 function drawTail(ctx, body) {
-    body.tail.drawSemicircle(ctx, Math.PI/2, -Math.PI/2);
+    const baseAngle = Math.atan2(body.tail.direction.y, body.tail.direction.x);
+    const startAngle = baseAngle + Math.PI/2;
+    const endAngle = baseAngle - Math.PI/2;
+    
+    ctx.beginPath();
+    ctx.arc(
+        body.tail.position.x,
+        body.tail.position.y,
+        body.tail.size,
+        startAngle,
+        endAngle
+    );
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 }
 
 /**
@@ -78,7 +106,7 @@ function drawTail(ctx, body) {
 function drawSmiley(ctx, body) {
     // Calculate eye positions using relative angles
     const eyeOffset = body.head.size * 1;
-    const eyeAngle = Math.PI/3; // 90 degrees for eye placement
+    const eyeAngle = Math.PI/3; // 60 degrees for eye placement
     
     // Calculate left eye position
     const leftEyeVector = body.head.direction.clone()
@@ -100,7 +128,7 @@ function drawSmiley(ctx, body) {
     ctx.fill();
 
     // Draw smile using the same angle logic but with a smaller radius
-    const baseAngle = body.head.direction.clone().angleTo();
+    const baseAngle = Math.atan2(body.head.direction.y, body.head.direction.x);
     const startAngle = baseAngle + Math.PI/2;
     const endAngle = baseAngle - Math.PI/2;
     

@@ -80,11 +80,8 @@ class Vector {
         // Calculate the angle between this vector and the target vector
         const currentAngle = this.angleTo(targetVector);
         
-        // If the angle is greater than PI, we need to rotate in the opposite direction
-        const rotationDirection = currentAngle > Math.PI ? 1 : -1;
-        
-        // Rotate by the given angle in the correct direction
-        this.rotate(rotationDirection * angle);
+        // Rotate by the given angle in the direction of the target
+        this.rotate(currentAngle > 0 ? angle : -angle);
         
         return this;
     }
@@ -101,12 +98,14 @@ class Vector {
 
     // Returns the angle between this vector and another vector, normalized between -π and π
     angleTo(v = new Vector(1, 0)) {
-        let angle = Math.atan2(v.x, v.y) - Math.atan2(this.x, this.y);
+        // Calculate the angle between the vectors using atan2
+        const angle = Math.atan2(v.y, v.x) - Math.atan2(this.y, this.x);
+        
         // Normalize to [-π, π]
         if (angle > Math.PI) {
-            angle -= 2 * Math.PI;
+            return angle - 2 * Math.PI;
         } else if (angle < -Math.PI) {
-            angle += 2 * Math.PI;
+            return angle + 2 * Math.PI;
         }
         return angle;
     }
@@ -132,7 +131,7 @@ class Vector {
         const arrowLength = this.headSize;  // Length of the arrow head
         const arrowAngle = this.headAngle;  // 30 degrees
 
-        // Calculate the angle of the vector
+        // Calculate the angle of the vector (using same order as angleTo)
         const angle = Math.atan2(this.y, this.x);
         
         // Calculate the end point of the vector
