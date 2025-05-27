@@ -12,11 +12,22 @@ class Fish extends Body {
     speedDecay = 0.005;
     speedDecayCounter = 0;
 
+    /**
+     * Turns the fish towards a specific point in the canvas.
+     * @param {number} x - The x-coordinate of the target point.
+     * @param {number} y - The y-coordinate of the target point.
+     */
     turnToPoint(x, y) {
         // Calculate direction vector from fish to click point
         const direction = new Vector(x - this.head.position.x, y - this.head.position.y);
-        // turn towards this direction
-        this.head.direction.rotateTowards(direction, Math.PI/4);
+        // Calculate the angle between current direction and target direction
+        const angleToTarget = this.head.direction.angleTo(direction);
+        // Use the smaller angle between PI/4 and the actual angle
+        let turnAngle = Math.min(Math.abs(angleToTarget), Math.PI/4);
+        turnAngle = Math.max(turnAngle, Math.PI/16);
+        turnAngle *= Math.sign(angleToTarget);
+        // Rotate by the calculated angle
+        this.head.direction.rotate(turnAngle);
         // Reset speed for smooth movement
         this.speed = this.speedAfterRandomMovement;
         this.speedDecayCounter = 0;
