@@ -10,6 +10,8 @@ const ctx = canvas.getContext('2d');
 //const Kois = [new Fish([12, 14, 15, 14, 12, 10, 8, 6, 4])];
 const Kois = [new Fish([12, 14, 30, 14, 12, 10, 8, 6, 4])];
 
+let food = [];
+
 // Define functions------------------------------------------------------------
 
 // Resize the canvas when the window is resized
@@ -32,6 +34,9 @@ function animate() {
         //drawAsVectors(ctx, koi);
         drawFish(ctx, koi);
     });
+
+    // Draw all food
+    food.forEach(f => f.draw(ctx));
     
     // Request next frame
     requestAnimationFrame(animate);
@@ -51,6 +56,10 @@ window.addEventListener('resize', resize);
 
 // Handle mouse clicks
 canvas.addEventListener('click', (event) => {
+
+    // Create new food at the click point
+    food.push(new Food(event.clientX, event.clientY));
+
     // Get click coordinates relative to canvas
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
