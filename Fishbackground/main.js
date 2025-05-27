@@ -48,3 +48,16 @@ window.addEventListener('load', () => {
 
 // Handle window resize
 window.addEventListener('resize', resize);
+
+// Handle mouse clicks
+canvas.addEventListener('click', (event) => {
+    // Get click coordinates relative to canvas
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    // Turn all fish towards the click point
+    Kois.forEach(koi => {
+        koi.turnToPoint(x, y);
+    });
+});

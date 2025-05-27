@@ -12,6 +12,16 @@ class Fish extends Body {
     speedDecay = 0.005;
     speedDecayCounter = 0;
 
+    turnToPoint(x, y) {
+        // Calculate direction vector from fish to click point
+        const direction = new Vector(x - this.head.position.x, y - this.head.position.y);
+        // turn towards this direction
+        this.head.direction.rotateTowards(direction, Math.PI/4);
+        // Reset speed for smooth movement
+        this.speed = this.speedAfterRandomMovement;
+        this.speedDecayCounter = 0;
+    }
+
     moveRandomly(){
         const didTurn = super.moveRandomly();
 
