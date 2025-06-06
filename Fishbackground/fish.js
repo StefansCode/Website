@@ -11,6 +11,7 @@ class Fish extends Body {
     speedAfterRandomMovement = 2;  //IDEA FOR LATER: Make this dependent on the turned angle
     speedDecay = 0.005;
     speedDecayCounter = 0;
+    isChasing = false;
 
     /**
      * Turns the fish towards a specific point in the canvas.
@@ -18,13 +19,20 @@ class Fish extends Body {
      * @param {number} y - The y-coordinate of the target point.
      */
     turnToPoint(x, y) {
+        if (this.isHeadAngleExceeded()){
+            return;
+        }
+        if (this.speed > 0.95*this.speedAfterRandomMovement){
+            return;
+        }
+
         // Calculate direction vector from fish to click point
         const direction = new Vector(x - this.head.position.x, y - this.head.position.y);
         // Calculate the angle between current direction and target direction
         const angleToTarget = this.head.direction.angleTo(direction);
         // Use the smaller angle between PI/4 and the actual angle
         let turnAngle = Math.min(Math.abs(angleToTarget), Math.PI/4);
-        turnAngle = Math.max(turnAngle, Math.PI/16);
+        turnAngle = Math.max(turnAngle, Math.PI/8);
         turnAngle *= Math.sign(angleToTarget);
         // Rotate by the calculated angle
         this.head.direction.rotate(turnAngle);
@@ -63,5 +71,11 @@ class Fish extends Body {
     move(){
         super.move();
         this.updateSpeed();
-    }   
+    }
+
+    getMouthPosition(){
+        var mouthPosition = this.head.position.clone();
+        mouthPosition.add(this.head.direction.scaleToLength(this.head.size/2));
+        return mouthPosition;
+    }
 }

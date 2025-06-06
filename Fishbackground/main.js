@@ -22,14 +22,63 @@ function resize() {
     console.log(`Canvas Größe: ${canvas.width}x${canvas.height}`);
 }
 
+function getDistance(fish, food){
+    const fishMouthPosition = fish.getMouthPosition();
+    const distance = Math.sqrt((fishMouthPosition.x - food.x)**2 + (fishMouthPosition.y - food.y)**2);
+    return distance;
+}
+
+function getClosestFood(fish){
+    let closestFood = null;
+    let minDistance = Infinity;
+
+    food.forEach(f => {
+        const distance = getDistance(fish, f);
+        if (distance < minDistance){
+            minDistance = distance;
+            closestFood = f;
+        }
+    });
+    return closestFood;
+}
+
+const mouthsSize = 10;
+function checkIfFishCanEatFood(fish, food){
+    const distance = getDistance(fish, food);
+    if (distance < mouthsSize + food.size/2){
+        return true;
+    }
+    return false;
+}
+
 // Animation loop
 function animate() {
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
+    // update if Fish is chasing food
+    if (food.length > 0){
+        Kois.forEach(koi => {
+            koi.isChasing = true;
+        });
+    }
+    else{
+        Kois.forEach(koi => {
+            koi.isChasing = false;
+        });
+    }   
+
     // Update and draw all bodies
     Kois.forEach(koi => {
         koi.update();
+        if (koi.isChasing){
+            const closestFood = getClosestFood(koi);
+            koi.turnToPoint(closestFood.x, closestFood.y);
+            if (checkIfFishCanEatFood(koi, closestFood)){
+                //remove food
+                food.splice(food.indexOf(closestFood), 1);
+            }
+        }
         //drawAsCircles(ctx, koi);
         //drawAsVectors(ctx, koi);
         drawFish(ctx, koi);
