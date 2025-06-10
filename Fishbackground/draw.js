@@ -127,6 +127,7 @@ function drawSmiley(ctx, body) {
     ctx.fillStyle = 'white';
     ctx.fill();
 
+    /*
     // Draw smile using the same angle logic but with a smaller radius
     const baseAngle = Math.atan2(body.head.direction.y, body.head.direction.x);
     const startAngle = baseAngle + Math.PI/2;
@@ -143,6 +144,19 @@ function drawSmiley(ctx, body) {
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 2;
     ctx.stroke();
+    */
+}
+
+/**
+ * Draws the complete fish by combining all drawing functions
+ * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on
+ * @param {Body} body - The body to draw
+ */
+function drawBody(ctx, body) {
+    drawRightSide(ctx, body);
+    drawLeftSide(ctx, body);
+    drawHead(ctx, body);
+    drawTail(ctx, body);
 }
 
 /**
@@ -151,10 +165,7 @@ function drawSmiley(ctx, body) {
  * @param {Body} body - The body to draw
  */
 function drawFish(ctx, body) {
-    drawRightSide(ctx, body);
-    drawLeftSide(ctx, body);
-    drawHead(ctx, body);
-    drawTail(ctx, body);
+    drawBody(ctx, body);
     drawSmiley(ctx, body);
 }
 

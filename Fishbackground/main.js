@@ -24,7 +24,7 @@ function resize() {
 
 function getDistance(fish, food){
     const fishMouthPosition = fish.getMouthPosition();
-    const distance = Math.sqrt((fishMouthPosition.x - food.x)**2 + (fishMouthPosition.y - food.y)**2);
+    const distance = Math.sqrt((fishMouthPosition.x - food.head.position.x)**2 + (fishMouthPosition.y - food.head.position.y)**2);
     return distance;
 }
 
@@ -45,7 +45,7 @@ function getClosestFood(fish){
 const mouthsSize = 10;
 function checkIfFishCanEatFood(fish, food){
     const distance = getDistance(fish, food);
-    if (distance < mouthsSize + food.size/2){
+    if (distance < mouthsSize + food.head.size/2){
         return true;
     }
     return false;
@@ -73,19 +73,20 @@ function animate() {
         koi.update();
         if (koi.isChasing){
             const closestFood = getClosestFood(koi);
-            koi.turnToPoint(closestFood.x, closestFood.y);
+            koi.turnToPoint(closestFood.head.position.x, closestFood.head.position.y);
             if (checkIfFishCanEatFood(koi, closestFood)){
                 //remove food
                 food.splice(food.indexOf(closestFood), 1);
             }
         }
-        //drawAsCircles(ctx, koi);
-        //drawAsVectors(ctx, koi);
         drawFish(ctx, koi);
     });
 
-    // Draw all food
-    food.forEach(f => f.draw(ctx));
+    // Update and draw all food
+    food.forEach(f => {
+        f.update();
+        f.draw(ctx);
+    });
     
     // Request next frame
     requestAnimationFrame(animate);
