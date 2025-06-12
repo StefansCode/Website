@@ -12,6 +12,8 @@ const Kois = [new Fish([12, 14, 30, 14, 12, 10, 8, 6, 4])];
 
 let food = [];
 
+let circularWaves = [];
+
 // Define functions------------------------------------------------------------
 
 // Resize the canvas when the window is resized
@@ -85,7 +87,17 @@ function animate() {
     // Update and draw all food
     food.forEach(f => {
         f.update();
-        f.draw(ctx);
+        drawBody(ctx, f);
+    });
+
+    // Update and draw all circular waves
+    circularWaves.forEach(c => {
+        if (c.isMax()){
+            circularWaves.splice(circularWaves.indexOf(c), 1);
+        }
+        else{
+            c.draw(ctx);
+        }
     });
     
     // Request next frame
@@ -107,16 +119,20 @@ window.addEventListener('resize', resize);
 // Handle mouse clicks
 canvas.addEventListener('click', (event) => {
 
-    // Create new food at the click point
-    food.push(new Food(event.clientX, event.clientY));
-
     // Get click coordinates relative to canvas
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = event.clientX;
+    const y = event.clientY;
+
+    // Create new food at the click point
+    food.push(new Food(x, y));
+
+    // Create new circular wave at the click point
+    circularWaves.push(new CircularWave(x, y));
     
+    /*
     // Turn all fish towards the click point
     Kois.forEach(koi => {
         koi.turnToPoint(x, y);
     });
+    */
 });
