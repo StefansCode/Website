@@ -122,7 +122,7 @@ class Body {
      * @param {number} margin - Margin from the boundaries to start collision detection
      * @returns {boolean} True if the direction was changed, false otherwise
      */
-    checkBounds(margin = 100 ) {
+    checkBounds(margin = 0 ) {
         // Check if the head exists
         if (!this.head) return false;
 
