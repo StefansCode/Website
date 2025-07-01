@@ -175,7 +175,8 @@ function drawFish(ctx, body) {
  * @param {Body} body - The body to draw
  */
 function drawAsCircles(ctx, body) {
-    body.parts.forEach(part => part.drawAsCircle(ctx));
+    const drawer = new BodypartDrawer();
+    body.parts.forEach(part => drawer.drawBodypartAsCircle(ctx, part));
 }
 
 /**
@@ -184,5 +185,6 @@ function drawAsCircles(ctx, body) {
  * @param {Body} body - The body to draw
  */
 function drawAsVectors(ctx, body) {
-    body.parts.forEach(part => part.drawAsVector(ctx));
+    const drawer = new BodypartDrawer();
+    body.parts.forEach(part => drawer.drawBodypartAsVector(ctx, part));
 } 

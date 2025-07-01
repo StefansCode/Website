@@ -15,6 +15,7 @@ flowchart TD;
     Body --> Fish;
     Body --> Food;
     
+	BodypartDrawer  --> Draw;
     Draw -.-> Main
 		Fish -.-> Main;
 		Food -.-> Main;
