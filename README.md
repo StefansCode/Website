@@ -22,8 +22,8 @@ flowchart TD;
 		Circularwave -.-> Main
 		end
 
-		subgraph sg1[_]
-		Collaps;
+		subgraph sg1[Websiteinteraction]
+		Collapse;
 		end
 
 		Style;
@@ -34,6 +34,7 @@ flowchart TD;
 
 click Vector "https://github.com/StefansCode/Website/blob/main/Fishbackground/vector.js"
 click Bodypart "https://github.com/StefansCode/Website/blob/main/Fishbackground/bodypart.js"
+click BodypartDrawer "https://github.com/StefansCode/Website/blob/main/Fishbackground/BodypartDrawer.js"
 click Body "https://github.com/StefansCode/Website/blob/main/Fishbackground/body.js"
 click Fish "https://github.com/StefansCode/Website/blob/main/Fishbackground/fish.js"
 click Food "https://github.com/StefansCode/Website/blob/main/Fishbackground/food.js"
