@@ -40,9 +40,9 @@ click Draw "https://github.com/StefansCode/Website/blob/main/Fishbackground/draw
 click Circularwave "https://github.com/StefansCode/Website/blob/main/Fishbackground/circularwave.js"
 click Main "https://github.com/StefansCode/Website/blob/main/Fishbackground/main.js"
 
-click Collaps "https://github.com/StefansCode/Website/blob/main/collaps.js"
+click Collapse "https://github.com/StefansCode/Website/blob/main/collapse.js"
 
-click Style "https://github.com/StefansCode/Website/blob/main/style.css"
+click Style "https://github.com/StefansCode/Website/blob/main/styles.css"
 
 click Index "https://github.com/StefansCode/Website/blob/main/index.html"
 ```
